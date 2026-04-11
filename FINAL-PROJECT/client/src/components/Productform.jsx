@@ -1,113 +1,130 @@
-import React,{useState} from 'react'
-import axios from 'axios';
+import React, { useState } from 'react'
+import axios from 'axios'
 
-const Productform = ({fetchProducts}) => {
-    const [formdata,setFormdata] = useState({
-        name:'',
-        price:'',
-        category:'',
-        image:'',
-        description:'',
-        stock:'',
-    });
- const [message,setMessage] = useState('');
+const Productform = ({ fetchProducts }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    category: '',
+    image: '',
+    description: '',
+    stock: '',
+  })
 
- const hc =(e)=> {
-    setFormdata({
-        ...formdata,
-        [e.target.name]:e.target.value,
-    });
- }
+  const [message, setMessage] = useState('')
 
- const hs = async (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
     try {
-        await axios.post("http://localhost:5600/api/products",{
-        ...formdata,
-        price:Number(formdata.price),
-        stock:Number(formdata.stock),
-      });
-      setMessage("product added successfully");
-      setFormdata({
-        name:'',
-        price:'',
-        category:'',
-        description:'',
-        stock:'',
-      });
+      await axios.post('http://localhost:5600/api/products', {
+        ...formData,
+        price: Number(formData.price),
+        stock: Number(formData.stock),
+      })
+
+      setMessage('Product added successfully')
+
+      setFormData({
+        name: '',
+        price: '',
+        category: '',
+        image: '',
+        description: '',
+        stock: '',
+      })
+
       fetchProducts()
-    } catch(err) {
-        console.error(err);
+    } catch (error) {
+      console.log(error)
+      setMessage('Product not added')
     }
- }
-  return <>
-  <div className='mt-5'>
-    {message && (
-        <p>{message}</p>
-    )}
-  </div>
+  }
 
-  <form onSubmit={hs} className='mt-5'>
-    <input 
-    type='text'
-    name='name'
-    placeholder='product name'
-    value={formdata.name}
-    onChange={hc}
-    className='border'
-    required
-  />
-  <br></br>
-   <input 
-    type='number'
-    name='price'
-    placeholder='product price'
-    value={formdata.price}
-    onChange={hc}
-    className='border'
-    required
-  />
-  <br></br>
-   <input 
-    type='text'
-    name='category'
-    placeholder='product category'
-    value={formdata.category}
-    onChange={hc}
-    className='border'
-    required
-  />
-  <br></br>
-   <textarea 
-    name='description'
-    placeholder='product description'
-    value={formdata.description}
-    rows={4}
-    onChange={hc}
-    className='border'
-    required
-  > </textarea>
-  <br></br>
-   <input 
-    type='number'
-    name='stock'
-    placeholder='product stock'
-    value={formdata.stock}
-    onChange={hc}
-    className='border'
-    required
-  />
-  <br></br>
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-blue-600 mb-5">Add Product</h2>
 
-  <button type='submit' className='border'>
-    Add Product
-  </button>
+      {message && (
+        <p className="mb-4 text-sm font-medium text-green-600">{message}</p>
+      )}
 
-  </form>
-  
-  
-  
-  </>
+      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4">
+        <input
+          type="text"
+          name="name"
+          placeholder="Product Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        />
+
+        <input
+          type="number"
+          name="price"
+          placeholder="Price"
+          value={formData.price}
+          onChange={handleChange}
+          className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        />
+
+        <input
+          type="text"
+          name="category"
+          placeholder="Category"
+          value={formData.category}
+          onChange={handleChange}
+          className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        />
+
+        <input
+          type="text"
+          name="image"
+          placeholder="Image URL"
+          value={formData.image}
+          onChange={handleChange}
+          className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        <input
+          type="number"
+          name="stock"
+          placeholder="Stock"
+          value={formData.stock}
+          onChange={handleChange}
+          className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        />
+
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
+          className="border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400 md:col-span-2"
+          rows="4"
+          required
+        ></textarea>
+
+        <button
+          type="submit"
+          className="md:col-span-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+        >
+          Add Product
+        </button>
+      </form>
+    </div>
+  )
 }
 
 export default Productform
