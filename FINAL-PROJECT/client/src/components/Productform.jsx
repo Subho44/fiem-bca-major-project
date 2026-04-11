@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import axios from 'axios'
 
-const Productform = ({ fetchProducts }) => {
+const Productform = ({ fetchProducts,editproduct,setEditproduct }) => {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -11,7 +11,21 @@ const Productform = ({ fetchProducts }) => {
     stock: '',
   })
 
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
+
+  useEffect(()=>{
+    if(editproduct) {
+      setFormData({
+        name:editproduct.name || '',
+        price:editproduct.price || '',
+        category:editproduct.category || '',
+        image:editproduct.image || '',
+        description:editproduct.description|| '',
+        stock:editproduct.stock || '',
+      })
+    }
+
+  },[editproduct])
 
   const handleChange = (e) => {
     setFormData({
@@ -19,29 +33,35 @@ const Productform = ({ fetchProducts }) => {
       [e.target.name]: e.target.value,
     })
   }
-
+const clearform = ()=>{
+  setFormData({
+    name:"",
+    price:"",
+    category:"",
+    image:"",
+    description:"",
+    stock:"",
+  })
+  setEditproduct(null)
+}
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
-      await axios.post('http://localhost:5600/api/products', {
+      const payload = {
         ...formData,
         price: Number(formData.price),
         stock: Number(formData.stock),
-      })
-
-      setMessage('Product added successfully')
-
-      setFormData({
-        name: '',
-        price: '',
-        category: '',
-        image: '',
-        description: '',
-        stock: '',
-      })
-
-      fetchProducts()
+      }
+      if(editproduct) {
+         await axios.put(`http://localhost:5600/api/products/${editproduct._id}`,payload);
+         setMessage('Product update successfully');
+      } else {
+        await axios.post('http://localhost:5600/api/products',payload);
+        setMessage('Product added successfully')
+      }
+      clearform();
+      fetchProducts();
     } catch (error) {
       console.log(error)
       setMessage('Product not added')
@@ -50,7 +70,10 @@ const Productform = ({ fetchProducts }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-blue-600 mb-5">Add Product</h2>
+      <h2 className="text-2xl font-bold text-blue-600 mb-5">
+        {editproduct ? 'Edit product' : 'Add Product'}
+      </h2>
+
 
       {message && (
         <p className="mb-4 text-sm font-medium text-green-600">{message}</p>
@@ -120,7 +143,14 @@ const Productform = ({ fetchProducts }) => {
           type="submit"
           className="md:col-span-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
         >
-          Add Product
+          {editproduct ? 'Update Product' : 'Add Product'}
+        </button>
+         <button
+          type="button"
+          onClick={clearform}
+          className="md:col-span-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+        >
+          clear
         </button>
       </form>
     </div>

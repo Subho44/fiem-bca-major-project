@@ -6,6 +6,7 @@ import ProductCard from '../components/Productcard'
 const Products = () => {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [editproduct,setEditproduct]= useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -16,6 +17,24 @@ const Products = () => {
       console.log(error)
       setLoading(false)
     }
+  }
+
+  const hd = async (id)=> {
+    try {
+        await axios.delete(`http://localhost:5600/api/products/${id}`);
+        fetchProducts();
+
+        if(editproduct && editproduct._id === id){
+            setEditproduct(null)
+        }
+    } catch(err) {
+        console.log(err);
+    }
+  }
+
+  const he = (product)=>{
+    setEditproduct(product);
+
   }
 
   useEffect(() => {
@@ -33,7 +52,7 @@ const Products = () => {
         </div>
 
         <div className="mb-10">
-          <ProductForm fetchProducts={fetchProducts} />
+          <ProductForm fetchProducts={fetchProducts} editproduct={editproduct} setEditproduct={setEditproduct} />
         </div>
 
         <div className="mb-6">
@@ -47,7 +66,7 @@ const Products = () => {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((item) => (
-              <ProductCard key={item._id} product={item} />
+              <ProductCard key={item._id} product={item} onEdit={he} onDelete={hd} />
             ))}
           </div>
         )}

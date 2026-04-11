@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Productcard = ({ product }) => {
+const Productcard = ({ product,onEdit,onDelete }) => {
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition">
       <img
@@ -23,9 +23,24 @@ const Productcard = ({ product }) => {
           <span className="text-sm text-gray-500">Stock: {product.stock}</span>
         </div>
 
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium">
-          View Details
+        <div className='flex gap-3'>
+        <button 
+        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium"
+        onClick={()=>onEdit(product)}
+        >
+          Edit
         </button>
+
+         <button 
+        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium"
+        onClick={()=>onDelete(product._id)}
+        >
+          Delete
+        </button>
+
+        </div>
+
+        
       </div>
     </div>
   )
