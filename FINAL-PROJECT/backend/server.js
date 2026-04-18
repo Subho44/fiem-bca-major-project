@@ -2,18 +2,29 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectdb = require("./config/db");
-const productroute = require("./routes/productRoutes");
+const courserouter = require("./routes/courseRoutes");
+
+const path = require("path");
+
 dotenv.config();
+
 const app = express();
 
-connectdb();
+//static images 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cors());
 app.use(express.json());
-app.use('/api/products',productroute)
-app.get("/",(req,res)=>{
-    res.send("backend api is working");
+
+connectdb();
+
+app.use('/api/courses', courserouter);
+
+
+app.get('/', (req, res) => {
+  res.send("api is running");
 });
-const port = process.env.PORT || 5600;
-app.listen(port,()=>{
-    console.log("server is running port 5600");
+
+const port = process.env.PORT || 5500;
+app.listen(port, () => {
+  console.log(`server is running on port ${port}`);
 });

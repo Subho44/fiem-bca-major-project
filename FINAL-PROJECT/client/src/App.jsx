@@ -1,31 +1,43 @@
-import React from 'react'
-import { BrowserRouter,Routes,Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Home from './components/Home'
-import About from './components/About'
-import Contact from './components/Contact'
-import Service from './components/Service'
-import Products from './components/Products'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Feature from "./pages/Feauture";
+
+import AddCourse from "./pages/Addcourse";
+import EditCourse from "./pages/Editcourse";
+import SingleCourse from "./pages/Singelcourse";
+
+
 
 const App = () => {
+  return (
+    <BrowserRouter>
+      <Navbar />
 
-  return <>
-  <BrowserRouter>
-  <Navbar/>
-  <Routes>
-    <Route path='/' element={<Home/>}></Route>
-    <Route path='/about' element={<About/>}></Route>
-    <Route path='/contact' element={<Contact/>}></Route>
-    <Route path='/service' element={<Service/>}></Route>
-    <Route path='/products' element={<Products/>}></Route>
-  </Routes>
-  
-  
-  
-  </BrowserRouter>
-  
-  
-  </>
-}
+      <div className="min-h-screen">
+        <Routes>
+          <Route path="/" element={<Home />} />
 
-export default App
+         
+
+          <Route path="/add-course" element={<AddCourse />} />
+          <Route path="/edit-course/:id" element={<EditCourse />} />
+          <Route path="/course/:id" element={<SingleCourse />} />
+
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/f" element={<Feature />} />
+        </Routes>
+      </div>
+
+      <Footer />
+    </BrowserRouter>
+  );
+};
+
+export default App;
